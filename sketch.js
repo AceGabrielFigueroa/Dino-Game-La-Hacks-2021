@@ -62,9 +62,9 @@ var gameSprites = {
   "brick":      new sprite(80, 0, 16, 80, 0, 16, 16),
   "chickenF1":  new sprite(96, 0, 16, 96, 0, 16, 16),
   "chickenF2":  new sprite(112, 0, 16, 112, 0, 16, 16),
-  /* @TODO: Fix this */
+  /* @TODO: Fix this 
   "gameOver":   new sprite(0, 16, 3, 64, 32, 16, 16),
-  "dinoF1F3":   new sprite(64, 16, 16, 32);
+  "dinoF1F3":   new sprite(64, 16, 16, 32)*/
 };
 
 // @TODO: Decide on a starting location
