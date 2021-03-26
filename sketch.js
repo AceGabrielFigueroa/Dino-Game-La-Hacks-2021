@@ -118,6 +118,30 @@ function playerMovement() {
     }
 }
 
+function playerRotato() {
+  switch(player.getDirection()) {
+    case 38:
+      translate(player.x, player.y);
+      rotate(0);
+    break;
+
+    case 40:
+      translate(player.x, player.y);
+      rotate(PI);
+    break;
+
+    case 37:
+      translate(player.x, player.y);
+      rotate(-HALF_PI);
+    break;
+
+    case 39:
+      translate(player.x, player.y);
+      rotate(HALF_PI);
+    break;
+  }
+}
+
 function drawBoard() {
   for(var y = 32; y < (16 * (tilesY - 1)); y += 16) {
     for(var x = 16; x < (16 * (tilesX - 1)); x += 16) {
@@ -229,8 +253,7 @@ function draw() {
   drawBoard();
   
   // This is player
-  translate(player.x, player.y);
-  rotate(2 * PI);
+  playerRotato();
   image(tileset, 0, 0, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
   gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
   gameSprites["dinoF1F3"].sHeight);
