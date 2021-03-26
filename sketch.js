@@ -227,5 +227,9 @@ function draw() {
   clear();
   background(220); 
   drawBoard();
-  circle(player.x, player.y, 16);
+  
+  // This is player
+  image(tileset, player.x, player.y, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
+  gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
+  gameSprites["dinoF1F3"].sHeight);
 }
