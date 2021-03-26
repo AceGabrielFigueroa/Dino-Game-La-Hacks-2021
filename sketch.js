@@ -35,8 +35,8 @@ class sprite extends gameObject {
 //**********************************//
 /* DEFINE ALL GLOBAL VARIABLES HERE */
 //**********************************//
-let tilesX = 40; // 16
-let tilesY = 40; // 12
+let tilesX = 16; // 16
+let tilesY = 12; // 12
 var frame = 0;
 
 /* Defining the canvas and game state */
@@ -92,8 +92,7 @@ let gameSprites = {
 // @TODO: Decide on a starting location
 var player = new playerObject(
   gameBoard.canvasX / 2, 
-  gameBoard.canvasY / 2, 10);
-
+  gameBoard.canvasY - 32);
 
 //**********************************//
 /*    DEFINE ALL FUNCTIONS HERE     */
@@ -290,6 +289,13 @@ function draw() {
   clear();
   background(220); 
   drawBoard();
+
+  if(frame === -1){
+    imageMode(CENTER);
+    image(tileset, gameBoard.canvasX/2, gameBoard.canvasY/2 + 16, gameSprites["gameOver"].width, gameSprites["gameOver"].height,
+    gameSprites["gameOver"].sx, gameSprites["gameOver"].sy, gameSprites["gameOver"].sWidth, 
+    gameSprites["gameOver"].sHeight);
+  }
   
   // This is player
   imageMode(CENTER);
