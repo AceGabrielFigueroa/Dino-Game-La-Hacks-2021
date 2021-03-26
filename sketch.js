@@ -35,8 +35,8 @@ class sprite extends gameObject {
 //**********************************//
 /* DEFINE ALL GLOBAL VARIABLES HERE */
 //**********************************//
-let tilesX = 16; // 16
-let tilesY = 12; // 12
+let tilesX = 40; // 16
+let tilesY = 40; // 12
 var frame = 0;
 
 /* Defining the canvas and game state */
@@ -45,13 +45,14 @@ let gameBoard = {
   "canvasY": tilesY * 16,
   "gameX": (tilesX - 2) * 16,
   "gameY": (tilesY - 3) * 16,
-  "boundTop": -31,
-  "boundBot": -(tilesY * 16) + 16,
+  "boundTop": 31,
+  "boundBot": (tilesY * 16) - 16,
   "boundLeft": 15,
   "boundRight": tilesX * 16 - 16,
 
   /* Defining the gamestate */
-  "paused": true
+  "paused": true,
+  "gameOver": false
 };
 
 /* Defining sprites */
@@ -101,26 +102,45 @@ var player = new playerObject(
 function playerMovement() {
   if(player.canMove())
     switch(player.getDirection()){
+      // UP_ARROW
       case 38:
-        player.y -= 8;
+        if(player.y - 16 > gameBoard.boundTop)
+          player.y -= 8;
+        else {
+          gameBoard.paused = true;
+          gameBoard.gameOver = true;
+        }
       break;
 
+      // DOWN_ARROW
       case 40:
-        player.y += 8;
+        if(player.y + 8 < gameBoard.boundBot)
+          player.y += 8;
+        else {
+          gameBoard.paused = true;
+          gameBoard.gameOver = true;
+        }
       break;
 
+      // ARROW_LEFT
       case 37:
-        player.x -= 8;
+        if(player.x - 16 > gameBoard.boundLeft)
+            player.x -= 8;
+        else {
+          gameBoard.paused = true;
+          gameBoard.gameOver = true;
+        }
       break;
 
       case 39:
-        player.x += 8;
+        if(player.x + 8 < gameBoard.boundRight)
+          player.x += 8;
+        else {
+          gameBoard.paused = true;
+          gameBoard.gameOver = true;
+        }
       break;
     }
-}
-
-function playerCollision() {
-
 }
 
 function playerRotato() {
@@ -177,6 +197,13 @@ function playerDraw(){
       gameSprites["dinoF4"].sx, gameSprites["dinoF4"].sy, gameSprites["dinoF4"].sWidth, 
       gameSprites["dinoF4"].sHeight);
     break;
+
+    //Frame Death
+    case -1:
+      image(tileset, 0, 0, gameSprites["dinoDeath"].width, gameSprites["dinoDeath"].height,
+      gameSprites["dinoDeath"].sx, gameSprites["dinoDeath"].sy, gameSprites["dinoDeath"].sWidth, 
+      gameSprites["dinoDeath"].sHeight);
+    break;
   }
 
 }
@@ -216,7 +243,7 @@ function drawBoard() {
 //**********************************//
 function keyPressed() {
   // Space -> Paused Movement
-  if(keyCode === 32) {
+  if(keyCode === 32 && !gameBoard.gameOver) {
     gameBoard.paused = !gameBoard.paused;
     
     // Flip all movement
@@ -271,5 +298,8 @@ function draw() {
 
   if(!gameBoard.paused){
     frame++;
+  } 
+  else if(gameBoard.gameOver) {
+    frame = -1;
   }
 }
