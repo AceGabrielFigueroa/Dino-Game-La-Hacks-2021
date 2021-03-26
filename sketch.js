@@ -1,7 +1,6 @@
 class gameObject {
   
-  constructor(x, y, radius=16){
-    this.radius = radius;
+  constructor(x, y){
     this.x = x;
     this.y = y;
     
@@ -12,8 +11,8 @@ class gameObject {
 }
 
 class playerObject extends gameObject {
-  constructor(x, y, radius=16){
-    super(x, y, radius);
+  constructor(x, y){
+    super(x, y);
     this.direction = 38;
   }
   
@@ -21,9 +20,11 @@ class playerObject extends gameObject {
 }
 
 class sprite extends gameObject {
-  constructor(x, y, radius, sx, sy, sWidth, sHeight) {
-    super(x, y, radius);
-    
+  constructor(x, y, width, height, sx, sy, sWidth, sHeight) {
+    super(x, y);
+
+    this.width = width;
+    this.height = height;
     this.sx = sx;
     this.sy = sy;
     this.sWidth = sWidth;
@@ -54,14 +55,14 @@ var gameBoard = {
 
 /* Defining sprites */
 var gameSprites = {
-  "fireF1":     new sprite(0, 0, 16, 0, 0, 16, 16),
-  "fireF2":     new sprite(16, 0, 16, 16, 0, 16, 16),
-  "fireF3":     new sprite(32, 0, 16, 32, 0, 16, 16),
-  "fireF4":     new sprite(48, 0, 16, 48, 0, 16, 16),
-  "sand":       new sprite(64, 0, 16, 64, 0, 16, 16),
-  "brick":      new sprite(80, 0, 16, 80, 0, 16, 16),
-  "chickenF1":  new sprite(96, 0, 16, 96, 0, 16, 16),
-  "chickenF2":  new sprite(112, 0, 16, 112, 0, 16, 16),
+  "fireF1":     new sprite(0, 0, 16, 16, 0, 0, 16, 16),
+  "fireF2":     new sprite(16, 0, 16, 16, 16, 0, 16, 16),
+  "fireF3":     new sprite(32, 0, 16, 16, 32, 0, 16, 16),
+  "fireF4":     new sprite(48, 0, 16, 16, 48, 0, 16, 16),
+  "sand":       new sprite(64, 0, 16, 16, 64, 0, 16, 16),
+  "brick":      new sprite(80, 0, 16, 16, 80, 0, 16, 16),
+  "chickenF1":  new sprite(96, 0, 16, 16, 96, 0, 16, 16),
+  "chickenF2":  new sprite(112, 0, 16, 16, 112, 0, 16, 16),
   /* @TODO: Fix this 
   "gameOver":   new sprite(0, 16, 3, 64, 32, 16, 16),
   "dinoF1F3":   new sprite(64, 16, 16, 32)*/
@@ -144,9 +145,12 @@ function draw() {
   playerMovement();
   
   for(const [key, value] of Object.entries(gameSprites)) {
-    image(tileset, value.x, value.y, value.radius, value.radius,
+    image(tileset, value.x, value.y, value.width, value.height,
       value.sx, value.sy, value.sWidth, value.sHeight);
   }
+
+  image(tileset, 16, 32, gameSprites["sand"].width, gameSprites["sand"].height,
+  gameSprites["sand"].sx, gameSprites["sand"].sy, gameSprites["sand"].sWidth, gameSprites["sand"].sHeight);
 
   circle(player.x, player.y, 16);
 }
