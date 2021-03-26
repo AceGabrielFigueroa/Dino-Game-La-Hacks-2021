@@ -37,7 +37,7 @@ class sprite extends gameObject {
 //**********************************//
 let tilesX = 16; // 16
 let tilesY = 12; // 12
-var dinoFrame = 0;
+var frame = 0;
 
 /* Defining the canvas and game state */
 let gameBoard = {
@@ -213,8 +213,8 @@ function setup() {
 
 function draw() {
   frameRate(8);
-  if(dinoFrame > 6){
-    dinoFrame = 0;
+  if(frame > 6){
+    frame = 0;
   }
 
   // Collisions and movement
@@ -229,7 +229,7 @@ function draw() {
   // This is player
   imageMode(CENTER);
   playerRotato();
-  switch(Math.floor(dinoFrame/2)){
+  switch(Math.floor(frame/2)){
 
     //Frame 1
     case 0:
@@ -261,6 +261,6 @@ function draw() {
   }
 
   if(!gameBoard.paused){
-    dinoFrame++;
+    frame++;
   }
 }
