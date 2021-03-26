@@ -229,7 +229,9 @@ function draw() {
   drawBoard();
   
   // This is player
-  image(tileset, player.x, player.y, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
+  translate(player.x, player.y);
+  rotate(2 * PI);
+  image(tileset, 0, 0, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
   gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
   gameSprites["dinoF1F3"].sHeight);
 }
