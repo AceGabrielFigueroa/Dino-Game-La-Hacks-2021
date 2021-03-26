@@ -119,6 +119,10 @@ function playerMovement() {
     }
 }
 
+function playerCollision() {
+
+}
+
 function playerRotato() {
   switch(player.getDirection()) {
     case 38:
@@ -141,6 +145,40 @@ function playerRotato() {
       rotate(HALF_PI);
     break;
   }
+}
+
+function playerDraw(){
+  switch(Math.floor(frame/2)){
+
+    //Frame 1
+    case 0:
+      image(tileset, 0, 0, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
+      gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
+      gameSprites["dinoF1F3"].sHeight);
+    break;
+
+    //Frame 2
+    case 1:
+      image(tileset, 0, 0, gameSprites["dinoF2"].width, gameSprites["dinoF2"].height,
+      gameSprites["dinoF2"].sx, gameSprites["dinoF2"].sy, gameSprites["dinoF2"].sWidth, 
+      gameSprites["dinoF2"].sHeight);
+    break;
+
+    //Frame 3
+    case 2:
+      image(tileset, 0, 0, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
+      gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
+      gameSprites["dinoF1F3"].sHeight);
+    break;
+
+    //Frame 4
+    case 3:
+      image(tileset, 0, 0, gameSprites["dinoF4"].width, gameSprites["dinoF4"].height,
+      gameSprites["dinoF4"].sx, gameSprites["dinoF4"].sy, gameSprites["dinoF4"].sWidth, 
+      gameSprites["dinoF4"].sHeight);
+    break;
+  }
+
 }
 
 function drawBoard() {
@@ -229,36 +267,7 @@ function draw() {
   // This is player
   imageMode(CENTER);
   playerRotato();
-  switch(Math.floor(frame/2)){
-
-    //Frame 1
-    case 0:
-      image(tileset, 0, 0, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
-      gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
-      gameSprites["dinoF1F3"].sHeight);
-    break;
-
-    //Frame 2
-    case 1:
-      image(tileset, 0, 0, gameSprites["dinoF2"].width, gameSprites["dinoF2"].height,
-      gameSprites["dinoF2"].sx, gameSprites["dinoF2"].sy, gameSprites["dinoF2"].sWidth, 
-      gameSprites["dinoF2"].sHeight);
-    break;
-
-    //Frame 3
-    case 2:
-      image(tileset, 0, 0, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
-      gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
-      gameSprites["dinoF1F3"].sHeight);
-    break;
-
-    //Frame 4
-    case 3:
-      image(tileset, 0, 0, gameSprites["dinoF4"].width, gameSprites["dinoF4"].height,
-      gameSprites["dinoF4"].sx, gameSprites["dinoF4"].sy, gameSprites["dinoF4"].sWidth, 
-      gameSprites["dinoF4"].sHeight);
-    break;
-  }
+  playerDraw();
 
   if(!gameBoard.paused){
     frame++;
