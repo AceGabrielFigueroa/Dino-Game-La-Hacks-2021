@@ -150,7 +150,7 @@ function drawBoard() {
         gameSprites["sand"].sHeight); 
     }
   }
-  console.log("this");
+  
   for(var x = 0; x < (16 * tilesX); x += 16) {
     image(tileset, x, 16, gameSprites["brick"].width, gameSprites["brick"].height,
     gameSprites["brick"].sx, gameSprites["brick"].sy, gameSprites["brick"].sWidth, 
@@ -204,37 +204,6 @@ function keyPressed() {
     }
 }
 
-function drawBoard() {
-  for(var y = 32; y < (16 * (tilesY - 1)); y += 16) {
-    for(var x = 16; x < (16 * (tilesX - 1)); x += 16) {
-        image(tileset, x, y, gameSprites["sand"].width, gameSprites["sand"].height,
-        gameSprites["sand"].sx, gameSprites["sand"].sy, gameSprites["sand"].sWidth, 
-        gameSprites["sand"].sHeight); 
-    }
-  }
-
-  for(var x = 0; x < (16 * tilesX); x += 16) {
-    image(tileset, x, 16, gameSprites["brick"].width, gameSprites["brick"].height,
-    gameSprites["brick"].sx, gameSprites["brick"].sy, gameSprites["brick"].sWidth, 
-    gameSprites["brick"].sHeight);
-    
-    image(tileset, x, (tilesY - 1) * 16, gameSprites["brick"].width, gameSprites["brick"].height,
-    gameSprites["brick"].sx, gameSprites["brick"].sy, gameSprites["brick"].sWidth, 
-    gameSprites["brick"].sHeight); 
-  }
-
-    for(var y = 16; y < (16 * tilesY); y += 16) {
-    image(tileset, 0, y, gameSprites["brick"].width, gameSprites["brick"].height,
-    gameSprites["brick"].sx, gameSprites["brick"].sy, gameSprites["brick"].sWidth, 
-    gameSprites["brick"].sHeight);
-    
-    image(tileset, (tilesX - 1) * 16, y, gameSprites["brick"].width, gameSprites["brick"].height,
-    gameSprites["brick"].sx, gameSprites["brick"].sy, gameSprites["brick"].sWidth, 
-    gameSprites["brick"].sHeight); 
-  }
-  
-}
-
 function setup() {
   createCanvas(gameBoard.canvasX, gameBoard.canvasY);
 
@@ -248,11 +217,13 @@ function draw() {
   playerMovement();
 
   // Draw graphics
+  imageMode(CORNER);
   clear();
   background(220); 
   drawBoard();
   
   // This is player
+  imageMode(CENTER);
   playerRotato();
   image(tileset, 0, 0, gameSprites["dinoF1F3"].width, gameSprites["dinoF1F3"].height,
   gameSprites["dinoF1F3"].sx, gameSprites["dinoF1F3"].sy, gameSprites["dinoF1F3"].sWidth, 
