@@ -61,8 +61,8 @@ class sprite extends gameObject {
 //**********************************//
 /* DEFINE ALL GLOBAL VARIABLES HERE */
 //**********************************//
-let tilesX = 16; // 16
-let tilesY = 12; // 12
+let tilesX = 20; // 16
+let tilesY = 20; // 12
 var frame = 0; //current in-game frame
 
 /* Defining the canvas and game state */
@@ -337,8 +337,10 @@ function drawChickenFly(obj) {
 }
 
 function fireBallMovement(obj) {
-  obj.x += obj.speedX;
-  obj.y += obj.speedY;
+  if(player.canMove()) {
+    obj.x += obj.speedX;
+    obj.y += obj.speedY;
+  }
 }
 
 function fireBallCollision(obj) {
