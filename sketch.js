@@ -60,7 +60,7 @@ class sprite extends gameObject {
 //**********************************//
 let tilesX = 16; // 16
 let tilesY = 12; // 12
-var frame = 0;
+var frame = 0; //current in-game frame
 
 /* Defining the canvas and game state */
 let gameBoard = {
@@ -77,6 +77,7 @@ let gameBoard = {
   /* Defining the gamestate */
   "paused": true,
   "gameOver": false,
+  "score": 0
 };
 
 /* Defining sprites */
@@ -117,6 +118,7 @@ let gameSprites = {
 var player = new playerObject(0, 0);
 var chicken = new gameObject(0, 0);
 var chicken2 = new gameObject(0, 0);
+//var scoreBoard = new gameObject((gameBoard.tilesX-4)*16,0);
 
 //**********************************//
 /*    DEFINE ALL FUNCTIONS HERE     */
@@ -276,15 +278,58 @@ function bhibkenBollision(obj){
   if(playerBoundingBox[0] < bhibkenBoundingBox[2] &&
     playerBoundingBox[2] > bhibkenBoundingBox[0] &&
     playerBoundingBox[1] < bhibkenBoundingBox[3] &&
-    playerBoundingBox[3] > bhibkenBoundingBox[1])
-    placeChicken(obj);
+    playerBoundingBox[3] > bhibkenBoundingBox[1]) {
+      gameBoard.score += 10;
+      placeChicken(obj);
+    }
 }
 
 /* Function to draw chicken legs */
 function drawChicken(obj) {
   imageMode(CORNER);
-  image(tileset, obj.x, obj.y, gameSprites.chickenF1.width, gameSprites.chickenF1.height,
+  switch(Math.floor(frame/4))
+  {
+    case 0:
+      image(tileset, obj.x, obj.y, gameSprites.chickenF1.width, gameSprites.chickenF1.height,
     gameSprites.chickenF1.sx, gameSprites.chickenF1.sy, gameSprites.chickenF1.sWidth, gameSprites.chickenF1.sHeight);
+    break;
+    
+    case 1:
+      image(tileset, obj.x, obj.y, gameSprites.chickenF2.width, gameSprites.chickenF2.height,
+    gameSprites.chickenF2.sx, gameSprites.chickenF2.sy, gameSprites.chickenF2.sWidth, gameSprites.chickenF2.sHeight);
+    break;
+  }
+}
+
+/* Function to draw chicken legs */
+function drawChickenFly(obj) {
+  imageMode(CORNER);
+  switch(Math.floor(frame/2))
+  {
+    //frame 1
+    case 0:
+      image(tileset, obj.x, obj.y, gameSprites.chickenFlyF1.width, gameSprites.chickenFlyF1.height,
+    gameSprites.chickenFlyF1.sx, gameSprites.chickenFlyF1.sy, gameSprites.chickenFlyF1.sWidth, gameSprites.chickenFlyF1.sHeight);
+    break;
+    
+    //frame 2
+    case 1:
+      image(tileset, obj.x, obj.y, gameSprites.chickenFlyF2F4.width, gameSprites.chickenFlyF2F4.height,
+    gameSprites.chickenFlyF2F4.sx, gameSprites.chickenFlyF2F4.sy, gameSprites.chickenFlyF2F4.sWidth, gameSprites.chickenFlyF2F4.sHeight);
+    break;
+    
+    //frame 3
+    case 2:
+      image(tileset, obj.x, obj.y, gameSprites.chickenFlyF3.width, gameSprites.chickenFlyF3.height,
+    gameSprites.chickenFlyF3.sx, gameSprites.chickenFlyF3.sy, gameSprites.chickenFlyF3.sWidth, gameSprites.chickenFlyF3.sHeight);
+    break;
+    
+    //frame 4
+    case 3:
+      image(tileset, obj.x, obj.y, gameSprites.chickenFlyF2F4.width, gameSprites.chickenFlyF2F4.height,
+    gameSprites.chickenFlyF2F4.sx, gameSprites.chickenFlyF2F4.sy, gameSprites.chickenFlyF2F4.sWidth, gameSprites.chickenFlyF2F4.sHeight);
+    break;
+  }
 }
 
 /* Function to draw game states (game_over, score) */
@@ -294,6 +339,220 @@ function gameStateDraw() {
     image(tileset, gameBoard.canvasX/2, gameBoard.canvasY/2 + 16, gameSprites["gameOver"].width, gameSprites["gameOver"].height,
     gameSprites["gameOver"].sx, gameSprites["gameOver"].sy, gameSprites["gameOver"].sWidth, 
     gameSprites["gameOver"].sHeight);
+  }
+  
+  //convert score to string and prepend with zeros if necessary
+  scoreStr = gameBoard.score.toString();
+  switch(scoreStr.length){
+    case 1:
+      scoreStr = "000"+scoreStr;
+    break;
+    
+    case 2:
+      scoreStr = "00"+scoreStr;
+    break;
+    
+    case 3:
+      scoreStr = "0"+scoreStr;
+    break;
+  }
+  
+  imageMode(CORNER);
+  switch(scoreStr.charAt(0)){     
+    case "0":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["zero"].width, gameSprites["zero"].height,
+    gameSprites["zero"].sx, gameSprites["zero"].sy, gameSprites["zero"].sWidth, 
+    gameSprites["zero"].sHeight);
+    break;
+    
+    case "1":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["one"].width, gameSprites["one"].height,
+    gameSprites["one"].sx, gameSprites["one"].sy, gameSprites["one"].sWidth, 
+    gameSprites["one"].sHeight);
+    break;
+    
+    case "2":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["two"].width, gameSprites["two"].height,
+    gameSprites["two"].sx, gameSprites["two"].sy, gameSprites["two"].sWidth, 
+    gameSprites["two"].sHeight);
+    break;
+    
+    case "3":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["three"].width, gameSprites["three"].height,
+    gameSprites["three"].sx, gameSprites["three"].sy, gameSprites["three"].sWidth, 
+    gameSprites["three"].sHeight);
+    break;
+    
+    case "4":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["four"].width, gameSprites["four"].height,
+    gameSprites["four"].sx, gameSprites["four"].sy, gameSprites["four"].sWidth, 
+    gameSprites["four"].sHeight);
+    break;
+    
+    case "5":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["five"].width, gameSprites["five"].height,
+    gameSprites["five"].sx, gameSprites["five"].sy, gameSprites["five"].sWidth, 
+    gameSprites["five"].sHeight);
+    break;
+    
+    case "6":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["six"].width, gameSprites["six"].height,
+    gameSprites["six"].sx, gameSprites["six"].sy, gameSprites["six"].sWidth, 
+    gameSprites["six"].sHeight);
+    break;
+    
+    case "7":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["seven"].width, gameSprites["seven"].height,
+    gameSprites["seven"].sx, gameSprites["seven"].sy, gameSprites["seven"].sWidth, 
+    gameSprites["seven"].sHeight);
+    break;
+    
+    case "8":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["eight"].width, gameSprites["eight"].height,
+    gameSprites["eight"].sx, gameSprites["eight"].sy, gameSprites["eight"].sWidth, 
+    gameSprites["eight"].sHeight);
+    break;
+    
+    case "9":
+      image(tileset, gameBoard.canvasX-64, 0, gameSprites["nine"].width, gameSprites["nine"].height,
+    gameSprites["nine"].sx, gameSprites["nine"].sy, gameSprites["nine"].sWidth, 
+    gameSprites["nine"].sHeight);
+    break;
+  }
+  switch(scoreStr.charAt(1)){
+      case "0":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["zero"].width, gameSprites["zero"].height,
+    gameSprites["zero"].sx, gameSprites["zero"].sy, gameSprites["zero"].sWidth, 
+    gameSprites["zero"].sHeight);
+    break;
+    
+    case "1":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["one"].width, gameSprites["one"].height,
+    gameSprites["one"].sx, gameSprites["one"].sy, gameSprites["one"].sWidth, 
+    gameSprites["one"].sHeight);
+    break;
+    
+    case "2":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["two"].width, gameSprites["two"].height,
+    gameSprites["two"].sx, gameSprites["two"].sy, gameSprites["two"].sWidth, 
+    gameSprites["two"].sHeight);
+    break;
+    
+    case "3":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["three"].width, gameSprites["three"].height,
+    gameSprites["three"].sx, gameSprites["three"].sy, gameSprites["three"].sWidth, 
+    gameSprites["three"].sHeight);
+    break;
+    
+    case "4":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["four"].width, gameSprites["four"].height,
+    gameSprites["four"].sx, gameSprites["four"].sy, gameSprites["four"].sWidth, 
+    gameSprites["four"].sHeight);
+    break;
+    
+    case "5":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["five"].width, gameSprites["five"].height,
+    gameSprites["five"].sx, gameSprites["five"].sy, gameSprites["five"].sWidth, 
+    gameSprites["five"].sHeight);
+    break;
+    
+    case "6":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["six"].width, gameSprites["six"].height,
+    gameSprites["six"].sx, gameSprites["six"].sy, gameSprites["six"].sWidth, 
+    gameSprites["six"].sHeight);
+    break;
+    
+    case "7":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["seven"].width, gameSprites["seven"].height,
+    gameSprites["seven"].sx, gameSprites["seven"].sy, gameSprites["seven"].sWidth, 
+    gameSprites["seven"].sHeight);
+    break;
+    
+    case "8":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["eight"].width, gameSprites["eight"].height,
+    gameSprites["eight"].sx, gameSprites["eight"].sy, gameSprites["eight"].sWidth, 
+    gameSprites["eight"].sHeight);
+    break;
+    
+    case "9":
+      image(tileset, gameBoard.canvasX-48, 0, gameSprites["nine"].width, gameSprites["nine"].height,
+    gameSprites["nine"].sx, gameSprites["nine"].sy, gameSprites["nine"].sWidth, 
+    gameSprites["nine"].sHeight);
+    break;
+  }
+  switch(scoreStr.charAt(2)){
+    case "0":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["zero"].width, gameSprites["zero"].height,
+    gameSprites["zero"].sx, gameSprites["zero"].sy, gameSprites["zero"].sWidth, 
+    gameSprites["zero"].sHeight);
+    break;
+    
+    case "1":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["one"].width, gameSprites["one"].height,
+    gameSprites["one"].sx, gameSprites["one"].sy, gameSprites["one"].sWidth, 
+    gameSprites["one"].sHeight);
+    break;
+    
+    case "2":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["two"].width, gameSprites["two"].height,
+    gameSprites["two"].sx, gameSprites["two"].sy, gameSprites["two"].sWidth, 
+    gameSprites["two"].sHeight);
+    break;
+    
+    case "3":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["three"].width, gameSprites["three"].height,
+    gameSprites["three"].sx, gameSprites["three"].sy, gameSprites["three"].sWidth, 
+    gameSprites["three"].sHeight);
+    break;
+    
+    case "4":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["four"].width, gameSprites["four"].height,
+    gameSprites["four"].sx, gameSprites["four"].sy, gameSprites["four"].sWidth, 
+    gameSprites["four"].sHeight);
+    break;
+    
+    case "5":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["five"].width, gameSprites["five"].height,
+    gameSprites["five"].sx, gameSprites["five"].sy, gameSprites["five"].sWidth, 
+    gameSprites["five"].sHeight);
+    break;
+    
+    case "6":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["six"].width, gameSprites["six"].height,
+    gameSprites["six"].sx, gameSprites["six"].sy, gameSprites["six"].sWidth, 
+    gameSprites["six"].sHeight);
+    break;
+    
+    case "7":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["seven"].width, gameSprites["seven"].height,
+    gameSprites["seven"].sx, gameSprites["seven"].sy, gameSprites["seven"].sWidth, 
+    gameSprites["seven"].sHeight);
+    break;
+    
+    case "8":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["eight"].width, gameSprites["eight"].height,
+    gameSprites["eight"].sx, gameSprites["eight"].sy, gameSprites["eight"].sWidth, 
+    gameSprites["eight"].sHeight);
+    break;
+    
+    case "9":
+      image(tileset, gameBoard.canvasX-32, 0, gameSprites["nine"].width, gameSprites["nine"].height,
+    gameSprites["nine"].sx, gameSprites["nine"].sy, gameSprites["nine"].sWidth, 
+    gameSprites["nine"].sHeight);
+    break;
+  }
+  switch(scoreStr.charAt(3)){
+    case "0":
+      image(tileset, gameBoard.canvasX-16, 0, gameSprites["zero"].width, gameSprites["zero"].height,
+    gameSprites["zero"].sx, gameSprites["zero"].sy, gameSprites["zero"].sWidth, 
+    gameSprites["zero"].sHeight);
+    break;
+    
+    case "5":
+    image(tileset, gameBoard.canvasX-16, 0, gameSprites["five"].width, gameSprites["five"].height,
+    gameSprites["five"].sx, gameSprites["five"].sy, gameSprites["five"].sWidth, 
+    gameSprites["five"].sHeight);
+    break;
   }
 }
 
@@ -383,6 +642,7 @@ function draw() {
 
   if(!gameBoard.paused){
     frame++;
+    //gameBoard.score+=5;
   } 
   else if(gameBoard.gameOver) {
     frame = -1;
