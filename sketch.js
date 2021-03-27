@@ -6,6 +6,8 @@ class gameObject {
     
     this.movement = false;
     this.speed = speed;
+    this.speedX = speed;
+    this.speedY = speed;
   }
   
   canMove() { return this.movement;}
@@ -122,6 +124,8 @@ var chicken = new gameObject(0, 0, 0);
 var chicken2 = new gameObject(0, 0, 0);
 
 var fireBall = new gameObject(0, 0 ,0);
+var fireBall1 = new gameObject(0, 0 ,0);
+var fireBall2 = new gameObject(0, 0 ,0);
 //**********************************//
 /*    DEFINE ALL FUNCTIONS HERE     */
 //**********************************//
@@ -333,17 +337,30 @@ function drawChickenFly(obj) {
 }
 
 function fireBallMovement(obj) {
-  obj.x += 5;
-  obj.y += 5;
+  obj.x += obj.speedX;
+  obj.y += obj.speedY;
 }
 
 function fireBallCollision(obj) {
   var playerBoundingBox = player.getBounds();
-  var fireBallBoundingBox = fireBall.getBounds();
+  var fireBallBoundingBox = obj.getBounds();
 
   collisionCheck(playerBoundingBox, fireBallBoundingBox, ()=>{
     endGame();
   });
+
+  if(obj.y < gameBoard.boundTop)
+    obj.speedY = obj.speed;
+
+  if(obj.y + 16 > gameBoard.boundBot)
+    obj.speedY = -obj.speed;
+
+  if(obj.x + 16 > gameBoard.boundRight)
+    obj.speedX = -obj.speed;
+
+  if(obj.x < gameBoard.boundLeft)
+    obj.speedX = obj.speed;
+
 }
 
 function drawFireBall(obj) {
@@ -405,6 +422,8 @@ function drawHitBoxes() {
   var chicken1Bounds = chicken.getBounds();
   var chicken2Bounds = chicken2.getBounds();
   var fireBallBounds = fireBall.getBounds();
+  var fireBallBounds1 = fireBall1.getBounds();
+  var fireBallBounds2 = fireBall2.getBounds();
 
   noStroke();
 
@@ -413,6 +432,8 @@ function drawHitBoxes() {
   rect(chicken1Bounds[0], chicken1Bounds[1], 16, 16);
   rect(chicken2Bounds[0], chicken2Bounds[1], 16, 16);
   rect(fireBallBounds[0], fireBallBounds[1], 16, 16);
+  rect(fireBallBounds1[0], fireBallBounds1[1], 16, 16);
+  rect(fireBallBounds2[0], fireBallBounds2[1], 16, 16);
 }
 
 /* Marvels reference */
@@ -465,6 +486,22 @@ function setup() {
   player.y = gameBoard.canvasY - 32;
   player.speed = 8;
   
+  fireBall.speed = 8;
+  fireBall.speedX = fireBall.speed;
+  fireBall.speedY = fireBall.speed;
+
+  fireBall1.speed = 8;
+  fireBall1.speedX = fireBall.speed;
+  fireBall1.speedY = fireBall.speed;
+
+  fireBall2.speed = 8;
+  fireBall2.speedX = fireBall2.speed;
+  fireBall2.speedY = fireBall2.speed;
+
+  placeChicken(fireBall);
+  placeChicken(fireBall1);
+  placeChicken(fireBall2);
+
   placeChicken(chicken);
   placeChicken(chicken2);
 }
@@ -478,10 +515,14 @@ function draw() {
   // Collisions and movement
   playerMovement();
   fireBallMovement(fireBall);
+  fireBallMovement(fireBall1);
+  fireBallMovement(fireBall2);
   
   bhibkenBollision(chicken);
   bhibkenBollision(chicken2);
   fireBallCollision(fireBall);
+  fireBallCollision(fireBall1);
+  fireBallCollision(fireBall2);
 
   // Draw graphics
   imageMode(CORNER);
@@ -495,6 +536,8 @@ function draw() {
 
   // Fireball
   drawFireBall(fireBall);
+  drawFireBall(fireBall1);
+  drawFireBall(fireBall2);
 
   // This is player
   push();
