@@ -18,30 +18,25 @@ class playerObject extends gameObject {
   }
   
   getDirection() { return this.direction; }
+
+  /* Bounds are defined by top left and bottom right corners */
   getBounds() { 
     switch(this.direction) {
       // UP_ARROW
       case 38:
+      return [this.x - 8, this.y - 16, this.x + 7, this.y - 1];
 
-      break;
-  
       // DOWN_ARROW
       case 40:
-        translate(player.x, player.y);
-        rotate(PI);
-      break;
+      return [this.x - 8, this.y, this.x + 7, this.y + 15];
   
       // LEFT_ARROW
       case 37:
-        translate(player.x, player.y);
-        rotate(-HALF_PI);
-      break;
+      return [this.x - 16, this.y - 8, this.x - 1, this.y + 7];
   
       // RIGHT_ARROW
       case 39:
-        translate(player.x, player.y);
-        rotate(HALF_PI);
-      break;
+      return [this.x, this.y - 8, this.x + 15, this.y + 7];
     }
     return [this.x - 8, this.y - 16, this.x + 7, this.y];
   }
@@ -82,7 +77,6 @@ let gameBoard = {
   /* Defining the gamestate */
   "paused": true,
   "gameOver": false,
-  "score": 0
 };
 
 /* Defining sprites */
@@ -279,10 +273,11 @@ function bhibkenBollision(obj){
   var bhibkenBoundingBox = obj.getBounds();
   var playerBoundingBox = player.getBounds();
 
-  if(bhibkenBoundingBox[0] >= playerBoundingBox[0] &&
-    bhibkenBoundingBox[1] <= playerBoundingBox[1]) {
+  if(playerBoundingBox[0] < bhibkenBoundingBox[2] &&
+    playerBoundingBox[2] > bhibkenBoundingBox[0] &&
+    playerBoundingBox[1] < bhibkenBoundingBox[3] &&
+    playerBoundingBox[3] > bhibkenBoundingBox[1])
     placeChicken(obj);
-  }
 }
 
 /* Function to draw chicken legs */
@@ -377,8 +372,14 @@ function draw() {
   playerDraw();
   pop();
 
+  noStroke();
+  
   var playerBounds = player.getBounds();
+  var chicken1Bounds = chicken.getBounds();
+
+  fill('rgba(100%,0%,0%,0.2)');
   rect(playerBounds[0], playerBounds[1], 16, 16);
+  rect(chicken1Bounds[0], chicken1Bounds[1], 16, 16);
 
   if(!gameBoard.paused){
     frame++;
