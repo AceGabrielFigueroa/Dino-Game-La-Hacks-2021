@@ -116,6 +116,7 @@ let gameSprites = {
 
 
 // @TODO: Decide on a starting location
+// Edit the values in the setup() function
 var player = new playerObject(0, 0, 8);
 var chicken = new gameObject(0, 0, 0);
 var chicken2 = new gameObject(0, 0, 0);
@@ -133,39 +134,31 @@ function playerMovement() {
       case 38:
         if(player.y - 16 > gameBoard.boundTop)
           player.y -= player.speed;
-        else {
-          gameBoard.paused = true;
-          gameBoard.gameOver = true;
-        }
+        else
+          endGame();
       break;
 
       // DOWN_ARROW
       case 40:
         if(player.y + 8 < gameBoard.boundBot)
           player.y += player.speed;
-        else {
-          gameBoard.paused = true;
-          gameBoard.gameOver = true;
-        }
+        else
+          endGame();
       break;
 
       // ARROW_LEFT
       case 37:
         if(player.x - 16 > gameBoard.boundLeft)
             player.x -= player.speed;
-        else {
-          gameBoard.paused = true;
-          gameBoard.gameOver = true;
-        }
+        else
+          endGame();
       break;
 
       case 39:
         if(player.x + 8 < gameBoard.boundRight)
           player.x += player.speed;
-        else {
-          gameBoard.paused = true;
-          gameBoard.gameOver = true;
-        }
+        else
+          endGame();
       break;
     }
 }
@@ -266,6 +259,15 @@ function drawBoard() {
   
 }
 
+function collisionCheck(obj1, obj2, callback) {
+  if(obj1[0] < obj2[2] &&
+    obj1[2] > obj2[0] &&
+    obj1[1] < obj2[3] &&
+    obj1[3] > obj2[1]) {
+      callback();
+    }
+}
+
 function placeChicken(obj) {
   /* Set chicken coords */
   obj.x = (Math.floor(Math.random() * (tilesX - 2)) + 1) * 16;
@@ -273,16 +275,13 @@ function placeChicken(obj) {
 }
 
 function bhibkenBollision(obj){
-  var bhibkenBoundingBox = obj.getBounds();
   var playerBoundingBox = player.getBounds();
+  var bhibkenBoundingBox = obj.getBounds();
 
-  if(playerBoundingBox[0] < bhibkenBoundingBox[2] &&
-    playerBoundingBox[2] > bhibkenBoundingBox[0] &&
-    playerBoundingBox[1] < bhibkenBoundingBox[3] &&
-    playerBoundingBox[3] > bhibkenBoundingBox[1]) {
-      gameBoard.score += 10;
-      placeChicken(obj);
-    }
+  collisionCheck(playerBoundingBox, bhibkenBoundingBox, () => {
+    gameBoard.score += 10;
+    placeChicken(obj);
+  });
 }
 
 /* Function to draw chicken legs */
@@ -334,7 +333,17 @@ function drawChickenFly(obj) {
 }
 
 function fireBallMovement(obj) {
-  
+  obj.x += 5;
+  obj.y += 5;
+}
+
+function fireBallCollision(obj) {
+  var playerBoundingBox = player.getBounds();
+  var fireBallBoundingBox = fireBall.getBounds();
+
+  collisionCheck(playerBoundingBox, fireBallBoundingBox, ()=>{
+    endGame();
+  });
 }
 
 function drawFireBall(obj) {
@@ -395,6 +404,7 @@ function drawHitBoxes() {
   var playerBounds = player.getBounds();
   var chicken1Bounds = chicken.getBounds();
   var chicken2Bounds = chicken2.getBounds();
+  var fireBallBounds = fireBall.getBounds();
 
   noStroke();
 
@@ -402,7 +412,17 @@ function drawHitBoxes() {
   rect(playerBounds[0], playerBounds[1], 16, 16);
   rect(chicken1Bounds[0], chicken1Bounds[1], 16, 16);
   rect(chicken2Bounds[0], chicken2Bounds[1], 16, 16);
+  rect(fireBallBounds[0], fireBallBounds[1], 16, 16);
 }
+
+/* Marvels reference */
+function endGame() {
+  /* jk its not*/
+  gameBoard.paused = true;
+  gameBoard.gameOver = true;
+  player.movement = false;
+}
+
 //**********************************//
 /*       DEFINE ALL PS5.js HERE     */
 //**********************************//
@@ -443,6 +463,7 @@ function setup() {
   /* Initialize coordinates of gameObjects */
   player.x = gameBoard.canvasX / 2; 
   player.y = gameBoard.canvasY - 32;
+  player.speed = 8;
   
   placeChicken(chicken);
   placeChicken(chicken2);
@@ -456,16 +477,17 @@ function draw() {
 
   // Collisions and movement
   playerMovement();
+  fireBallMovement(fireBall);
+  
   bhibkenBollision(chicken);
   bhibkenBollision(chicken2);
-
+  fireBallCollision(fireBall);
 
   // Draw graphics
   imageMode(CORNER);
   clear();
   background(220); 
   drawBoard();
-  gameStateDraw();
 
   // These are the chicken
   drawChicken(chicken);
@@ -481,6 +503,8 @@ function draw() {
   playerDraw();
   pop();
 
+  // draws score & endgame
+  gameStateDraw();
   drawHitBoxes();
 
   if(!gameBoard.paused){
