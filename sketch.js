@@ -1,10 +1,11 @@
 class gameObject {
   
-  constructor(x, y){
+  constructor(x, y, speed){
     this.x = x;
     this.y = y;
     
     this.movement = false;
+    this.speed = speed;
   }
   
   canMove() { return this.movement;}
@@ -12,8 +13,8 @@ class gameObject {
 }
 
 class playerObject extends gameObject {
-  constructor(x, y){
-    super(x, y);
+  constructor(x, y, speed){
+    super(x, y, speed);
     this.direction = 38;
   }
   
@@ -115,9 +116,9 @@ let gameSprites = {
 
 
 // @TODO: Decide on a starting location
-var player = new playerObject(0, 0);
-var chicken = new gameObject(0, 0);
-var chicken2 = new gameObject(0, 0);
+var player = new playerObject(0, 0, 8);
+var chicken = new gameObject(0, 0, 0);
+var chicken2 = new gameObject(0, 0, 0);
 
 //**********************************//
 /*    DEFINE ALL FUNCTIONS HERE     */
@@ -130,7 +131,7 @@ function playerMovement() {
       // UP_ARROW
       case 38:
         if(player.y - 16 > gameBoard.boundTop)
-          player.y -= 8;
+          player.y -= player.speed;
         else {
           gameBoard.paused = true;
           gameBoard.gameOver = true;
@@ -140,7 +141,7 @@ function playerMovement() {
       // DOWN_ARROW
       case 40:
         if(player.y + 8 < gameBoard.boundBot)
-          player.y += 8;
+          player.y += player.speed;
         else {
           gameBoard.paused = true;
           gameBoard.gameOver = true;
@@ -150,7 +151,7 @@ function playerMovement() {
       // ARROW_LEFT
       case 37:
         if(player.x - 16 > gameBoard.boundLeft)
-            player.x -= 8;
+            player.x -= player.speed;
         else {
           gameBoard.paused = true;
           gameBoard.gameOver = true;
@@ -159,7 +160,7 @@ function playerMovement() {
 
       case 39:
         if(player.x + 8 < gameBoard.boundRight)
-          player.x += 8;
+          player.x += player.speed;
         else {
           gameBoard.paused = true;
           gameBoard.gameOver = true;
@@ -459,10 +460,12 @@ function draw() {
   
   var playerBounds = player.getBounds();
   var chicken1Bounds = chicken.getBounds();
+  var chicken2Bounds = chicken2.getBounds();
 
   fill('rgba(100%,0%,0%,0.2)');
   rect(playerBounds[0], playerBounds[1], 16, 16);
   rect(chicken1Bounds[0], chicken1Bounds[1], 16, 16);
+  rect(chicken2Bounds[0], chicken2Bounds[1], 16, 16);
 
   if(!gameBoard.paused){
     frame++;
