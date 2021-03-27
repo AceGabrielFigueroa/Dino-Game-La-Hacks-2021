@@ -120,6 +120,7 @@ var player = new playerObject(0, 0, 8);
 var chicken = new gameObject(0, 0, 0);
 var chicken2 = new gameObject(0, 0, 0);
 
+var fireBall = new gameObject(0, 0 ,0);
 //**********************************//
 /*    DEFINE ALL FUNCTIONS HERE     */
 //**********************************//
@@ -332,6 +333,15 @@ function drawChickenFly(obj) {
   }
 }
 
+function fireBallMovement(obj) {
+  
+}
+
+function drawFireBall(obj) {
+  image(tileset, obj.x, obj.y, gameSprites.fireF1.width, gameSprites.fireF1.height,
+    gameSprites.fireF1.sx, gameSprites.fireF1.sy, gameSprites.fireF1.sWidth, gameSprites.fireF1.sHeight);
+}
+
 /* Function to draw game states (game_over, score) */
 function gameStateDraw() {
   if(frame === -1){
@@ -381,6 +391,18 @@ function gameStateDraw() {
   
 }
 
+function drawHitBoxes() {
+  var playerBounds = player.getBounds();
+  var chicken1Bounds = chicken.getBounds();
+  var chicken2Bounds = chicken2.getBounds();
+
+  noStroke();
+
+  fill('rgba(100%,0%,0%,0.2)');
+  rect(playerBounds[0], playerBounds[1], 16, 16);
+  rect(chicken1Bounds[0], chicken1Bounds[1], 16, 16);
+  rect(chicken2Bounds[0], chicken2Bounds[1], 16, 16);
+}
 //**********************************//
 /*       DEFINE ALL PS5.js HERE     */
 //**********************************//
@@ -449,6 +471,9 @@ function draw() {
   drawChicken(chicken);
   drawChicken(chicken2);
 
+  // Fireball
+  drawFireBall(fireBall);
+
   // This is player
   push();
   imageMode(CENTER);
@@ -456,16 +481,7 @@ function draw() {
   playerDraw();
   pop();
 
-  noStroke();
-  
-  var playerBounds = player.getBounds();
-  var chicken1Bounds = chicken.getBounds();
-  var chicken2Bounds = chicken2.getBounds();
-
-  fill('rgba(100%,0%,0%,0.2)');
-  rect(playerBounds[0], playerBounds[1], 16, 16);
-  rect(chicken1Bounds[0], chicken1Bounds[1], 16, 16);
-  rect(chicken2Bounds[0], chicken2Bounds[1], 16, 16);
+  drawHitBoxes();
 
   if(!gameBoard.paused){
     frame++;
