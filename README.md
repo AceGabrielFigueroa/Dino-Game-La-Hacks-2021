@@ -1,5 +1,5 @@
 ## Dino-Game-Expanded
-Simple Dino game based off of the google chromes offline easter egg.
+Simple Dino game based off of the google chromes offline easter egg. [Play here!](https://dino-game-7452.herokuapp.com/)
 
 ## Instructions
 Download the repo and open the /local/index.html in a browser! Works on any updated chromium browser.
