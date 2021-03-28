@@ -85,10 +85,10 @@ let gameBoard = {
 
 /* Defining sprites */
 let gameSprites = {
-  "fireF1":         new sprite(0, 0, 16, 16, 0, 0, 16, 16),
-  "fireF2":         new sprite(16, 0, 16, 16, 16, 0, 16, 16),
-  "fireF3":         new sprite(32, 0, 16, 16, 32, 0, 16, 16),
-  "fireF4":         new sprite(48, 0, 16, 16, 48, 0, 16, 16),
+  "fireF0":         new sprite(0, 0, 16, 16, 0, 0, 16, 16),
+  "fireF1":         new sprite(16, 0, 16, 16, 16, 0, 16, 16),
+  "fireF2":         new sprite(32, 0, 16, 16, 32, 0, 16, 16),
+  "fireF3":         new sprite(48, 0, 16, 16, 48, 0, 16, 16),
   "sand":           new sprite(64, 0, 16, 16, 64, 0, 16, 16),
   "brick":          new sprite(80, 0, 16, 16, 80, 0, 16, 16),
   "chickenF1":      new sprite(96, 0, 16, 16, 96, 0, 16, 16),
@@ -122,10 +122,10 @@ let gameSprites = {
 var player = new playerObject(0, 0, 8);
 var chicken = new gameObject(0, 0, 0);
 var chicken2 = new gameObject(0, 0, 0);
+var chickens = [new gameObject(0,0,0), new gameObject(0,0,0)];
+var chickenFly = [new gameObject(0,0,0)];
 
-var fireBall = new gameObject(0, 0 ,0);
-var fireBall1 = new gameObject(0, 0 ,0);
-var fireBall2 = new gameObject(0, 0 ,0);
+var fireBalls = [new gameObject(0,0,0), new gameObject(0,0,0), new gameObject(0,0,0)];
 //**********************************//
 /*    DEFINE ALL FUNCTIONS HERE     */
 //**********************************//
@@ -288,6 +288,35 @@ function bhibkenBollision(obj){
   });
 }
 
+function chickenFlyMovement(obj) {
+  if(player.canMove()) {
+    obj.x += obj.speedX;
+    obj.y += obj.speedY;
+  }
+}
+
+function chickenFlyCollision(obj) {
+  var playerBoundingBox = player.getBounds();
+  var chickenBoundingBox = obj.getBounds();
+  
+  collisionCheck(playerBoundingBox, chickenBoundingBox, () => {
+    gameBoard.score += 100;
+    placeChicken(obj);
+  });
+
+if(obj.y < gameBoard.boundTop)
+  obj.speedY = obj.speed;
+
+if(obj.y + 16 > gameBoard.boundBot)
+  obj.speedY = -obj.speed;
+
+if(obj.x + 16 > gameBoard.boundRight)
+  obj.speedX = -obj.speed;
+
+if(obj.x < gameBoard.boundLeft)
+  obj.speedX = obj.speed;
+}
+
 /* Function to draw chicken legs */
 function drawChicken(obj) {
   imageMode(CORNER);
@@ -366,8 +395,10 @@ function fireBallCollision(obj) {
 }
 
 function drawFireBall(obj) {
-  image(tileset, obj.x, obj.y, gameSprites.fireF1.width, gameSprites.fireF1.height,
-    gameSprites.fireF1.sx, gameSprites.fireF1.sy, gameSprites.fireF1.sWidth, gameSprites.fireF1.sHeight);
+  frameStr = Math.floor(frame/2).toString();
+  frameStr = "fireF"+frameStr;
+  image(tileset, obj.x, obj.y, gameSprites[frameStr].width, gameSprites[frameStr].height,
+    gameSprites[frameStr].sx, gameSprites[frameStr].sy, gameSprites[frameStr].sWidth, gameSprites[frameStr].sHeight);
 }
 
 /* Function to draw game states (game_over, score) */
@@ -421,21 +452,27 @@ function gameStateDraw() {
 
 function drawHitBoxes() {
   var playerBounds = player.getBounds();
-  var chicken1Bounds = chicken.getBounds();
-  var chicken2Bounds = chicken2.getBounds();
-  var fireBallBounds = fireBall.getBounds();
-  var fireBallBounds1 = fireBall1.getBounds();
-  var fireBallBounds2 = fireBall2.getBounds();
 
   noStroke();
 
   fill('rgba(100%,0%,0%,0.2)');
+
+  for(var fb of fireBalls) {
+    var boundingBox = fb.getBounds();
+    rect(boundingBox[0], boundingBox[1], 16, 16);
+  }
+
+  for(var c of chickens) {
+    var boundingBox = c.getBounds();
+    rect(boundingBox[0], boundingBox[1], 16, 16);
+  }
+
+  for(var fc of chickenFly) {
+    var boundingBox = fc.getBounds();
+    rect(boundingBox[0], boundingBox[1], 16, 16);
+  }
+
   rect(playerBounds[0], playerBounds[1], 16, 16);
-  rect(chicken1Bounds[0], chicken1Bounds[1], 16, 16);
-  rect(chicken2Bounds[0], chicken2Bounds[1], 16, 16);
-  rect(fireBallBounds[0], fireBallBounds[1], 16, 16);
-  rect(fireBallBounds1[0], fireBallBounds1[1], 16, 16);
-  rect(fireBallBounds2[0], fireBallBounds2[1], 16, 16);
 }
 
 /* Marvels reference */
@@ -487,25 +524,23 @@ function setup() {
   player.x = gameBoard.canvasX / 2; 
   player.y = gameBoard.canvasY - 32;
   player.speed = 8;
-  
-  fireBall.speed = 8;
-  fireBall.speedX = fireBall.speed;
-  fireBall.speedY = fireBall.speed;
 
-  fireBall1.speed = 8;
-  fireBall1.speedX = fireBall.speed;
-  fireBall1.speedY = fireBall.speed;
+  for(var fb of fireBalls) {
+    fb.speed = 8;
+    fb.speedX = fb.speed;
+    fb.speedY = fb.speed;
+    placeChicken(fb);
+  }
 
-  fireBall2.speed = 8;
-  fireBall2.speedX = fireBall2.speed;
-  fireBall2.speedY = fireBall2.speed;
+  for(var fc of chickenFly) {
+    fc.speed = 8;
+    fc.speedX = fc.speed;
+    fc.speedY = fc.speed;
+    placeChicken(fc);
+  }
 
-  placeChicken(fireBall);
-  placeChicken(fireBall1);
-  placeChicken(fireBall2);
-
-  placeChicken(chicken);
-  placeChicken(chicken2);
+  for(var c of chickens)
+    placeChicken(c);
 }
 
 function draw() {
@@ -516,15 +551,19 @@ function draw() {
 
   // Collisions and movement
   playerMovement();
-  fireBallMovement(fireBall);
-  fireBallMovement(fireBall1);
-  fireBallMovement(fireBall2);
-  
-  bhibkenBollision(chicken);
-  bhibkenBollision(chicken2);
-  fireBallCollision(fireBall);
-  fireBallCollision(fireBall1);
-  fireBallCollision(fireBall2);
+
+  for(var c of chickens)
+    bhibkenBollision(c);
+
+  for(var fc of chickenFly) {
+    chickenFlyMovement(fc);
+    chickenFlyCollision(fc);
+  }
+
+  for(var fb of fireBalls) {
+    fireBallMovement(fb);
+    fireBallCollision(fb);
+  }
 
   // Draw graphics
   imageMode(CORNER);
@@ -532,14 +571,15 @@ function draw() {
   background(220); 
   drawBoard();
 
-  // These are the chicken
-  drawChicken(chicken);
-  drawChicken(chicken2);
+    // These are the chicken
+  for(var c of chickens)
+    drawChicken(c);
 
-  // Fireball
-  drawFireBall(fireBall);
-  drawFireBall(fireBall1);
-  drawFireBall(fireBall2);
+  for(var fc of chickenFly)
+    drawChickenFly(fc);
+
+  for(var fb of fireBalls)
+    drawFireBall(fb);
 
   // This is player
   push();
@@ -550,7 +590,7 @@ function draw() {
 
   // draws score & endgame
   gameStateDraw();
-  drawHitBoxes();
+  //drawHitBoxes();
 
   if(!gameBoard.paused){
     frame++;
