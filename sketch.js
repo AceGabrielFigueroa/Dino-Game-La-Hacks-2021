@@ -61,9 +61,10 @@ class sprite extends gameObject {
 //**********************************//
 /* DEFINE ALL GLOBAL VARIABLES HERE */
 //**********************************//
-let tilesX = 20; // 16
-let tilesY = 20; // 12
+let tilesX = 16; // 16
+let tilesY = 12; // 12
 var frame = 0; //current in-game frame
+var biteFrame = 0; //current frame of bite anim
 
 /* Defining the canvas and game state */
 let gameBoard = {
@@ -120,10 +121,9 @@ let gameSprites = {
 // @TODO: Decide on a starting location
 // Edit the values in the setup() function
 var player = new playerObject(0, 0, 8);
-var chicken = new gameObject(0, 0, 0);
-var chicken2 = new gameObject(0, 0, 0);
 var chickens = [new gameObject(0,0,0), new gameObject(0,0,0)];
 var chickenFly = [new gameObject(0,0,0)];
+var bite = new gameObject(0,0,0);
 
 var fireBalls = [new gameObject(0,0,0), new gameObject(0,0,0), new gameObject(0,0,0)];
 //**********************************//
@@ -284,7 +284,10 @@ function bhibkenBollision(obj){
 
   collisionCheck(playerBoundingBox, bhibkenBoundingBox, () => {
     gameBoard.score += 10;
+    bite.x = bhibkenBoundingBox[0];
+    bite.y = bhibkenBoundingBox[1];
     placeChicken(obj);
+    biteFrame = 1; 
   });
 }
 
@@ -300,8 +303,11 @@ function chickenFlyCollision(obj) {
   var chickenBoundingBox = obj.getBounds();
   
   collisionCheck(playerBoundingBox, chickenBoundingBox, () => {
-    gameBoard.score += 100;
+    gameBoard.score += 25;
+    bite.x = chickenBoundingBox[0];
+    bite.y = chickenBoundingBox[1];
     placeChicken(obj);
+    biteFrame = 1;
   });
 
 if(obj.y < gameBoard.boundTop)
@@ -363,6 +369,14 @@ function drawChickenFly(obj) {
     gameSprites.chickenFlyF2F4.sx, gameSprites.chickenFlyF2F4.sy, gameSprites.chickenFlyF2F4.sWidth, gameSprites.chickenFlyF2F4.sHeight);
     break;
   }
+}
+
+function drawBite(){
+  biteFrameStr = biteFrame.toString();
+  biteFrameStr = "biteF"+biteFrameStr;
+  
+  image(tileset, bite.x, bite.y, gameSprites[biteFrameStr].width, gameSprites[biteFrameStr].height,
+    gameSprites[biteFrameStr].sx, gameSprites[biteFrameStr].sy, gameSprites[biteFrameStr].sWidth, gameSprites[biteFrameStr].sHeight);
 }
 
 function fireBallMovement(obj) {
@@ -571,6 +585,8 @@ function draw() {
   background(220); 
   drawBoard();
 
+  if(!gameBoard.gameOver){
+    
     // These are the chicken
   for(var c of chickens)
     drawChicken(c);
@@ -580,6 +596,18 @@ function draw() {
 
   for(var fb of fireBalls)
     drawFireBall(fb);
+  }
+  
+  //This is the bite
+  if(biteFrame > 0){
+    if(biteFrame > 3){
+      biteFrame = 0;
+    }
+    else{
+      drawBite();
+      biteFrame++;
+    }
+  }
 
   // This is player
   push();
