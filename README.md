@@ -2,7 +2,7 @@
 Simple Dino game based off of the google chromes offline easter egg.
 
 ## Instructions
-Download the repo and open the index.html in a browser! Works on any updated chromium browser.
+Download the repo and open the /local/index.html in a browser! Works on any updated chromium browser.
 
 ## Inspiration
 We kind of just wanted to make a game.
